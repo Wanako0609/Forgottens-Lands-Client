@@ -19,29 +19,28 @@ class Player:
     def update_data(self, player_data):
         pass
 
-    def move(self):
-        pressed = pygame.key.get_pressed()
-        keys = []
-
-        if pressed[pygame.K_q]:
-            #self.x -= self.speed
-            keys.append("left")
-
-        if pressed[pygame.K_d]:
-            #self.x += self.speed
-            keys.append("right")
-
-        if pressed[pygame.K_z]:
-            #self.y -= self.speed
-            keys.append("up")
-
-        if pressed[pygame.K_s]:
-            #self.y += self.speed
-            keys.append("down")
-
-        return keys
-
-        #self.update_rect()
-
     def update_rect(self):
         self.rect = (self.x, self.y, self.width, self.height)
+
+
+def move():
+    pressed = pygame.key.get_pressed()
+    keys = []
+
+    if pressed[pygame.K_q]:
+        # self.x -= self.speed
+        keys.append("left")
+
+    if pressed[pygame.K_d]:
+        # self.x += self.speed
+        keys.append("right")
+
+    if pressed[pygame.K_z]:
+        # self.y -= self.speed
+        keys.append("up")
+
+    if pressed[pygame.K_s]:
+        # self.y += self.speed
+        keys.append("down")
+
+    return keys
