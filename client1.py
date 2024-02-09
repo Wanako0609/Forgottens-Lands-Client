@@ -19,17 +19,18 @@ height = 500
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Forgotten Lands")
 
+
 # Draw windows
-def redrawWindow(window, player, players):
-    window.fill((255, 255,255 ))  # Clear to white
+def redrawWindow(win, player, players):
+    win.fill((255, 255, 255))  # Clear to white
 
     # Dessine et centre le joueur actuel
-    #player.draw(window)
+    player.draw(win)
     # Gestion plusieurs joueurs
-    for other_player in players:
-        other_player.draw(window)
+    #for other_player in players:
+    #    other_player.draw(window)
 
-    pygame.display.update()
+    pygame.display.flip()
 
 
 def send_data(n):
@@ -52,8 +53,53 @@ def send_data(n):
     keys = p.move()
     n.send(label="player_move", data=keys)
 
+# Gestion du traitement des données recu dans un autre thread
+# Actualisation de la page
 
-def main():
+
+def getted_data(n, player, win):
+    # Liste des players connecté
+    players = []
+
+    clock = pygame.time.Clock()
+
+    while True:
+        clock.tick(FPS)  # FPS
+        # Récupérez les données de la file et utilisez-les dans la logique du jeu
+        if not n.message_queue.empty():
+            data = n.message_queue.get()
+
+            if data["label"] == "player_data":
+                player_data = data["data"]
+                # player.update_data()
+
+            # Recoit le nombre de joueur connecté
+            elif data["label"] == "nb_players":
+                nb_players = data["data"]
+                #print(nb_players + " player connecté")
+                nb_players = int(nb_players)  # Transtypage en int
+
+            # Recoit joueurs connecté (class player client) pour le jeux
+            elif data["label"] == "other_players_start":
+                players = []
+            elif data["label"] == "other_players":
+                other_player_data = data["data"]
+                other_player = Player(other_player_data)
+                players.append(other_player)
+            elif data["label"] == "other_players_end":
+                #redrawWindow(win, player, players)
+                print("redraw")
+                pass
+
+            else:
+                print("Mauvais format donnée")
+                print(data)
+
+        #redrawWindow(window, player, players)
+        #pygame.display.flip()
+
+
+def main(win):
     uuid = login.login_user()  # Envoie l'uuid du joueur courant
 
     # Connection serveur
@@ -66,22 +112,31 @@ def main():
     # Démarrez le thread network de réception
     n.start_threads()
 
-    clock = pygame.time.Clock()
+    # Thread de traitement de data
+    recv = threading.Thread(target=getted_data, args=(n, player, win))
+    recv.start()
 
+    clock = pygame.time.Clock()
+    """
     while True:
         clock.tick(FPS)  # FPS
 
-        # Récupérez les données de la file et utilisez-les dans la logique du jeu
-        if not n.message_queue.empty():
-            data = n.message_queue.get()
+        #try:
+            # Envoie des request
+            #n.send(label="update_request", data="player_data")
 
-            print(data)
+            #time.sleep(0.05)
+            #n.send(label="update_request", data="nb_players")
 
-        n.send(label="update_request", data="player_data")
+            #time.sleep(0.05)
 
-        n.send(label="update_request", data="nb_players")
+            #n.send(label="update_request", data="other_players")
+        #except Exception as e:
+        #    print(f"Erreur lors de l'envoi : {e}") """
 
-        n.send(label="update_request", data="other_players")
+
+    #recv.join()
+
 
 if __name__ == '__main__':
-    main()
+    main(window)

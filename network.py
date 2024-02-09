@@ -1,6 +1,7 @@
 import socket
 import pickle
 import threading
+import time
 from queue import Queue
 
 
@@ -30,6 +31,7 @@ class Network:
 
     def send(self, label: str, data):
         labeled_data = {"label": label, "data": data}
+        print("data send", labeled_data)
         self.client.send(pickle.dumps(labeled_data))
 
     def recv_thread_method(self):
@@ -46,6 +48,7 @@ class Network:
             except socket.error as e:
                 print("error")
                 print(e)
+                self.close()
 
     # Fist connection Return Fist message
     def connect(self, uuid):
