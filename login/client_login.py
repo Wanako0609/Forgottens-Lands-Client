@@ -1,6 +1,4 @@
 from login.network_login import NetworkLogin
-from player import Player
-import json
 import uuid
 import bcrypt
 

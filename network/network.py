@@ -35,16 +35,16 @@ class Network:
             assert False, str_r
 
         except socket.error as se:
-            print(f"Socket error: {se}")
+            assert False, f"Socket error: {se}"
             # Gérer les erreurs spécifiques ici
         except pickle.PickleError as pe:
-            print(f"Pickle error: {pe}")
+            assert False,f"Pickle error: {pe}"
             # Gérer les erreurs de désérialisation spécifiques ici
         except Exception as e:
-            print(f"Unexpected error: {e}")
+            assert False,f"Unexpected error: {e}"
             # Gérer d'autres erreurs non prévues ici
 
     def close(self):
-        # Arrêter les threads avant de fermer la connexio
+        self.client.shutdown(socket.SHUT_RDWR)
         self.client.close()
 

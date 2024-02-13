@@ -1,11 +1,9 @@
-import time
-
 import pygame
 import threading
 import login.client_login as login
 from network import Network
-import player as p
-from player import Player
+from entities import player as p
+from entities.player import Player
 
 # Parametre
 FPS = 10
