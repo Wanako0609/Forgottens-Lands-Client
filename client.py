@@ -13,6 +13,7 @@ height = 500
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Forgotten Lands")
 
+# Go to upd
 
 # Draw windows
 def redrawWindow(window, player, players):
