@@ -14,11 +14,15 @@ def main():
 
     uuid = login.login_user()  # Envoie l'uuid du joueur courant
 
+    print("Network connection start")
     # Connection serveur
     n = Network("127.0.0.1", 5555, uuid)
 
+    print(n.get_player())
+    print("Screen Manager Start")
     # Gestion Screen
     screen = ScreenManager(uuid)
+    print("Screen")
 
     # Gestion des threads dans cette classe
     thread_manager = ThreadManager(n, screen)
